@@ -28,19 +28,30 @@ def graph():
             #print(v)
             G.add_edge(key, k)
 
-def downloadCounts():
-    url = "https://api.npmjs.org/downloads/point/" + "last-day" +  "/node"
+def downloadCounts(today, package):
+    # I have chosen the start date as 2014-01-01 to fetch all of the packages
+    url = "https://api.npmjs.org/downloads/point/" + "2014-01-01:" + today + "/" +  package
     r = urllib.request.urlopen(url)
-    dic = {}
     data = r.read().decode("utf-8")
     dic = json.loads(data)
-    print(dic["downloads"])
+    print(package)
+    return {package:str(dic["downloads"])}
+
 
 
 def main():
-    #graph()
-    #print(len(G))
-    downloadCounts()
+    graph()
+    print(len(G))
+    # Today's date
+    today = date.today().strftime('%Y-%m-%d')
+    # Create a dictionary to append
+    data = {}
+    print(today)
+    for node in G:
+        package = node
+        data.update(downloadCounts(today, package))
+    with open("downloadCounts.json", "w") as f:
+        json.dump(data, f)
 
 
 if __name__ == '__main__':
