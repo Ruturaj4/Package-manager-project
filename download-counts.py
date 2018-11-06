@@ -22,20 +22,23 @@ def graph():
         #print(value)
         values = {}
         values = value
-        #G.add_node(key)
+        G.add_node(key)
         #f.write(values)
         for k, v in values.items():
             #print(v)
             G.add_edge(key, k)
 
 def downloadCounts(today, package):
+    print(package)
     # I have chosen the start date as 2014-01-01 to fetch all of the packages
     url = "https://api.npmjs.org/downloads/point/" + "2014-01-01:" + today + "/" +  package
-    r = urllib.request.urlopen(url)
-    data = r.read().decode("utf-8")
-    dic = json.loads(data)
-    print(package)
-    return {package:str(dic["downloads"])}
+    try:
+        r = urllib.request.urlopen(url)
+        data = r.read().decode("utf-8")
+        dic = json.loads(data)
+        return {package:str(dic["downloads"])}
+    except urllib.error.HTTPError as err:
+        return {package:"Error"}
 
 
 
