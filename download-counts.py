@@ -22,7 +22,7 @@ def graph():
         #print(value)
         values = {}
         values = value
-        G.add_node(key)
+        #G.add_node(key)
         #f.write(values)
         for k, v in values.items():
             #print(v)

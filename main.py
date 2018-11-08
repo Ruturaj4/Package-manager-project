@@ -57,24 +57,29 @@ try:
             #dicversions = {}
             # ----
             #pp.pprint(values)
-            for x in values:
-                # A dictionary for all the versions of the package
-                dic = {}
-                dic = x
-                #print(dic)
-                if "Dependencies" in dic:
-                    # Check for a noneType
-                    if dic["Dependencies"] is not None:
-                        # dependency = (dic["dependencies"])
-                        # Append to the dictionary structure, so the dependencies are global, as in dependacies of the all the versions
-                        # Code for versions
-                        #dicversions.update(dic["dependencies"])
-                        # ----
-                        dependency.update(dic["Dependencies"])
-                # Code for versions
-                #pp.pprint(x)
-                #dversions[dic["version"]] = dicversions
-                # ----
+            #for x in values:
+            # A dictionary for all the versions of the package
+            try:
+                if values[-1]:
+                    dic = {}
+                    dic = values[-1]
+                    #print(dic)
+                    if "dependencies" in dic:
+                        # Check for a noneType
+                        if dic["dependencies"] is not None:
+                            # dependency = (dic["dependencies"])
+                            # Append to the dictionary structure, so the dependencies are global, as in dependacies of the all the versions
+                            # Code for versions
+                            #dicversions.update(dic["dependencies"])
+                            # ----
+                            dependency = ((dic["dependencies"]))
+            except:
+                pass
+            print(dependency)
+            # Code for versions
+            #pp.pprint(x)
+            #dversions[dic["version"]] = dicversions
+            # ----
             packaged[doc["id"]] = dependency
             # Code for versions
             #packaged[doc["id"]] = dversions
@@ -83,7 +88,7 @@ try:
             #print(len(dependency))
 finally:
     # Open packaged.json - for versionless
-    f = open("devpackaged.json", "w")
+    f = open("lastPackaged.json", "w")
     f.write(json.dumps(d))
     f.close()
     client.close()

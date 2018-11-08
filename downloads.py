@@ -16,9 +16,13 @@ def main():
         except:
             print("Error")
     sorted_dic = sorted(dic.items(), key=operator.itemgetter(1), reverse=True)
-    with open("top_downloads.json", "w") as fl:
-        json.dump(dic, fl)
-    print(len(dic))
+    #with open("top_downloads.json", "w") as fl:
+    #    json.dump(dic, fl)
+    #print(len(dic))
+    with open("1000downlaods.list", "w") as f:
+        for line in sorted_dic:
+            f.write(str(line))
+            f.write("\n")
 
 if __name__ == "__main__":
     main()
