@@ -13,11 +13,29 @@ import matplotlib as mpl
 import operator
 import csv
 
+import pandas
+
 import pprint
 
 # G is a graph
 G = nx.DiGraph()
 
+
+max_d = []
+
+def downloadCounts():
+    with open("downloadC.json", "r") as f:
+        f = json.load(f)
+    dic = {}
+    for key,values in f.items():
+        try:
+            temp = {}
+            temp[key] = values["downloads"]
+            dic.update(temp)
+        except:
+            pass
+    dic = sorted(dic.values(), reverse=True)
+    return dic
 
 def graph():
     pp = pprint.PrettyPrinter(indent = 4)
@@ -66,6 +84,7 @@ def dfs_depth(G, source=None, depth_limit=None):
                         stack.append((child, depth_now - 1, iter(G[child])))
             except StopIteration:
                 stack.pop()
+    global max_d
     max_d.append(max_depth)
 
 
@@ -73,28 +92,55 @@ def pageRank():
     #Calculate the page rank
     pr = {}
     pr = nx.pagerank(G)
-    sorted_pr = sorted(pr.items(), key=lambda x: x[1], reverse=True)
-    with open("pagerank.list", "a") as f:
-        for line in sorted_pr:
-            f.write(str(line))
-            f.write("\n")
+    pr = sorted(pr.values(), reverse=True)
+    return pr
+    #sorted_pr = sorted(pr.items(), key=lambda x: x[1], reverse=True)
+    #with open("pagerank.list", "a") as f:
+    #    for line in sorted_pr:
+    #        f.write(str(line))
+    #       f.write("\n")
 
-"""
-# Calculate all the dependencies, dependents
-dcon = {}
-for node in G:
-    print(node)
-    #temp = {node:len(G.out_edges(node))}
-    temp = {node:nx.cycle_basis(G, node)}
-    dcon.update(temp)
-
-sorted_dcon = sorted(dcon.items(), key=lambda x: x[1], reverse=True)
-
-with open("cycle.list", "a") as f:
-    for line in sorted_dcon:
-        f.write(str(line))
-        f.write("\n")
-"""
+def deplist(dc, pr):
+    # Calculate all the dependencies, dependents
+    dcon = {}
+    list1 = []
+    list2 = []
+    list3 = []
+    list4 = []
+    for node in G:
+        print(node)
+        #temp = {node:len(G.out_edges(node))}
+        list1.append(node)
+        list2.append(len(G.out_edges(node)))
+        list3.append(len(G.in_edges(node)))
+        list4.append(len(list(nx.dfs_edges(G,node))))
+        list(dfs_depth(G, node))
+        #dcon.update(temp)
+    list2 = sorted(list2, reverse=True)
+    list3 = sorted(list3, reverse=True)
+    list4 = sorted(list4, reverse=True)
+    global max_d
+    max_d = sorted(max_d, reverse=True)
+    print(max_d)
+    print("Maximums:")
+    print(max(list2[:1000]))
+    print(max(list3[:1000]))
+    print(max(list4[:1000]))
+    print(max(pr[:1000]))
+    print(max(max_d[:1000]))
+    print(max(dc[:1000]))
+    print("Minimums:")
+    print(min(list2[:1000]))
+    print(min(list3[:1000]))
+    print(min(list4[:1000]))
+    print(min(pr[:1000]))
+    print(min(max_d[:1000]))
+    print(min(dc[:1000]))
+    #sorted_dcon = sorted(dcon.items(), key=lambda x: x[1], reverse=True)
+    df = pandas.DataFrame(data={"Dependencies":list2[:1000], "Dependents":list3[:1000], "DFS-Edges":list4[:1000], "Max-Depth":max_d[:1000], "Page Rank":pr[:1000], "Download Counts":dc[:1000]})
+    df.plot(kind="density", subplots=True, layout=(3,3), sharex=False)
+    plt.show()
+    #df.to_csv("allthings.csv", sep=",", index=False)
 """
 #print(sorted(maxDepth))
 for node in G:
@@ -205,13 +251,14 @@ plt.show()
 
 def main():
     graph()
-    max_d = []
-    pageRank()
-    highest = []
-    for node in G:
-        if (len(G[node]) == 1000) :
-            print("This is the node:")
-            print(node)
+    dc = downloadCounts()
+    pr = pageRank()
+    deplist(dc, pr)
+    #highest = []
+    #for node in G:
+    #    if (len(G[node]) == 1000) :
+    #        print("This is the node:")
+    #        print(node)
     # Print total number of nodes ---- imp
     print("Total number of nodes: ")
     print(len(G))
@@ -220,10 +267,10 @@ def main():
 
     ################################
     #various plot
-    dfsedges()
-    dependency_graph()
-    dependency_graph()
-    dependency_graph()
+    #dfsedges()
+    #dependency_graph()
+    #dependency_graph()
+    #dependency_graph()
 
 
     ################################

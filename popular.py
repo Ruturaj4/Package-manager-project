@@ -44,18 +44,18 @@ def pawned(sorted_top):
     dic = {}
     #for node in G:
         #print(node)
-    
     for key,value in email.items():
         if key in sorted_top:
             print(key)
             li = []
             for emailId in value:
-                time.sleep(1.7)
+                time.sleep(1.8)
                 url = "https://haveibeenpwned.com/api/v2/breachedaccount/" + emailId
                 #print(url)
                 try:
                     r = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
                     webpage = urlopen(r).read()
+                    #print(webpage)
                     li.append("pwned")
                     print("P")
                 except:
