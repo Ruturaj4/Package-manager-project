@@ -5,7 +5,7 @@ dic = {}
 
 
 def main():
-    with open("downloadC.json", "r") as f:
+    with open("pwn.json", "r") as f:
         f = json.load(f)
 
     for key,values in f.items():
@@ -15,12 +15,11 @@ def main():
             dic.update(temp)
         except:
             print("Error")
-    sorted_dic = sorted(dic.items(), key=operator.itemgetter(1), reverse=True)
     #with open("top_downloads.json", "w") as fl:
     #    json.dump(dic, fl)
     #print(len(dic))
-    with open("1000downlaods.list", "w") as f:
-        for line in sorted_dic:
+    with open("pwnall.list", "w") as f:
+        for line in dic:
             f.write(str(line))
             f.write("\n")
 
