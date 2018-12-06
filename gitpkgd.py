@@ -94,7 +94,7 @@ try:
                             else if dependency != {}:
                                 try:
                                     time.sleep(1)
-                                    r = urllib.request.urlopen(urllib.request.Request(dependency, headers={'Authorization':'token e9d2e3322c30fefea166023d2ecf217578c7822b'}))
+                                    r = urllib.request.urlopen(urllib.request.Request(dependency, headers={'Authorization':'token TOKEN'}))
                                     data = r.read().decode("utf-8")
                                     dic = json.loads(data)
                                     print(dependency)
