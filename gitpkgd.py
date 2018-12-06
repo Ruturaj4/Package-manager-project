@@ -8,6 +8,12 @@ from pymongo import MongoClient
 #import networkx as nx
 #G = nx.Graph()
 
+import sys
+import time
+
+# Requests
+import urllib.request
+
 # Connect to the client
 client = MongoClient("mongodb://localhost:27017/")
 # Connect to final, which is ut dataset in this case
@@ -79,13 +85,24 @@ try:
                             dependency = dependency.replace("github.com", "api.github.com/repos")
                             if dependency.endswith(".git"):
                                 dependency = dependency[:-4]
+                            if not dependency.startswith("https://"):
+                                dependency = "https://" + dependency
                             if "github.com" not in dependency:
                                 dependency = {}
-                            if not dependency:
+                            if dependency != {}:
+                                try:
+                                    time.sleep(1)
+                                    r = urllib.request.urlopen(dependency)
+                                    data = r.read().decode("utf-8")
+                                    dic = json.loads(data)
+                                    dependency = dic["stargazers_count"]
+                                except urllib.error.HTTPError as err:
+                                    dependency = {}
 
             except:
                 pass
-            print(dependency)
+            if dependency != {}:
+                print(dependency)
             # Code for versions
             #pp.pprint(x)
             #dversions[dic["version"]] = dicversions
