@@ -72,9 +72,17 @@ try:
                             # Code for versions
                             #dicversions.update(dic["dependencies"])
                             # ----
-                            dependency = (dic["repository"]["url"]).replace("git+", "")
-                            if "github" not in dependency:
+                            dependency = (dic["repository"]["url"]).replace("ssh://", "")
+                            dependency = dependency.replace("git+", "")
+                            dependency = dependency.replace("git@", "")
+                            dependency = dependency.replace("git://", "")
+                            dependency = dependency.replace("github.com", "api.github.com/repos")
+                            if dependency.endswith(".git"):
+                                dependency = dependency[:-4]
+                            if "github.com" not in dependency:
                                 dependency = {}
+                            if not dependency:
+
             except:
                 pass
             print(dependency)
