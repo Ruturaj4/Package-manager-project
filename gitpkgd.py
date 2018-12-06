@@ -89,12 +89,15 @@ try:
                                 dependency = "https://" + dependency
                             if "github.com" not in dependency:
                                 dependency = {}
-                            if dependency != {}:
+                            if dependency == {}:
+                                continue
+                            else if dependency != {}:
                                 try:
                                     time.sleep(1)
-                                    r = urllib.request.urlopen(dependency)
+                                    r = urllib.request.urlopen(urllib.request.Request(dependency, headers={'Authorization':'token e9d2e3322c30fefea166023d2ecf217578c7822b'}))
                                     data = r.read().decode("utf-8")
                                     dic = json.loads(data)
+                                    print(dependency)
                                     dependency = dic["stargazers_count"]
                                 except urllib.error.HTTPError as err:
                                     dependency = {}
